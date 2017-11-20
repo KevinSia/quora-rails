@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
 	root 'static#index'
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+
+	resources :questions, except: [:new] do
+		resources :votes, only: [:create]
+	end
+	delete 'questions/:question_id/downvote' => 'votes#destroy', as: :delete_vote
 end

@@ -1,2 +1,42 @@
-<h1>Very nice homepage</h1>
+<% if params[:term] %>
+	<h1>Very nice results for term '<%= params[:term] %>'</h1>
+<% else %>
+	<h1>Very 'nice' homepage</h1>
+<% end %>
 
+
+<div style='margin-bottom: 50px;'>
+	<h3>Very nice form</h3>
+	<%= render 'questions/form' %>
+</div>
+
+<div style='margin-bottom: 50px'>
+	<h3>Very nice search</h3>
+	<%= form_tag '/', method: :get do %>
+		<%= text_field_tag :term, params[:term], placeholder: 'nice?' %>
+		<%= submit_tag 'Naise' %>
+	<% end %>
+</div>
+
+<div style='width: 500px; margin: 0 auto'>
+	<div style='text-align: center'>
+		<h3>Very nice questions</h3>
+	</div>
+	<% @questions.each do |q| %>
+		<div class='question' style='padding: 10px; border: 1px black solid; margin-bottom: 10px'>
+			<h3><%= q.title %></h3>
+			<p style='font-size: 10px'>Created at: <%= q.created_at.strftime('%d %b %Y') %></p>
+			<p><%= q.description %></p>
+			<% if current_user.voted_for_question?(question_id: q.id) %>
+				<%= form_tag delete_vote_path(q.id), method: :delete, style: 'display: inline;' do %>
+					<%= submit_tag 'No Naise?' %>
+				<% end %>
+			<% else %>
+				<%= form_tag question_votes_path(q.id), style: 'display: inline;' do %>
+						<%= submit_tag 'Naise?' %>
+				<% end %>
+			<% end %>
+			<p>Nice meter: <%= q.vote_count %></p>
+		</div>
+	<% end %>	
+</div>
